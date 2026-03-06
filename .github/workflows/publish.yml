@@ -1,0 +1,41 @@
+name: Auto Publish Article
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'   # Every Monday
+    - cron: '0 8 * * 4'   # Every Thursday
+  workflow_dispatch:        # Manual trigger
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install google-generativeai requests
+
+      - name: Generate article
+        run: python scripts/generate_article.py
+        env:
+          GEMINI_KEY_1: ${{ secrets.GEMINI_KEY_1 }}
+          GEMINI_KEY_2: ${{ secrets.GEMINI_KEY_2 }}
+          GEMINI_KEY_3: ${{ secrets.GEMINI_KEY_3 }}
+          GEMINI_KEY_4: ${{ secrets.GEMINI_KEY_4 }}
+          GEMINI_KEY_5: ${{ secrets.GEMINI_KEY_5 }}
+          GEMINI_KEY_6: ${{ secrets.GEMINI_KEY_6 }}
+          UNSPLASH_KEY: ${{ secrets.UNSPLASH_KEY }}
+
+      - name: Commit and push
+        run: |
+          git config user.name "AutoBot"
+          git config user.email "bot@noreply.com"
+          git add content/posts/ static/images/
+          git diff --cached --quiet || git commit -m "auto: article $(date +%Y-%m-%d)"
+          git push
