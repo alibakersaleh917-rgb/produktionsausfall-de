@@ -19,7 +19,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install google-generativeai requests
+        run: pip install google-genai requests
 
       - name: Generate article
         run: python scripts/generate_article.py

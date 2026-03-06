@@ -1,5 +1,6 @@
-import google.generativeai as genai
-import requests, os, datetime, random, re, shutil
+from google import genai
+from google.genai import types
+import requests, os, datetime, random, re, shutil, time
 from difflib import SequenceMatcher
 
 # --- API Keys ---
@@ -38,9 +39,12 @@ keyword  = random.choice(CONFIG["keywords"])
 def generate_with_fallback(prompt):
     for key in FLASH_KEYS:
         try:
-            genai.configure(api_key=key)
-            model = genai.GenerativeModel("gemini-1.5-flash")
-            return model.generate_content(prompt).text
+            client = genai.Client(api_key=key)
+            response = client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=prompt
+            )
+            return response.text
         except Exception as e:
             if "429" in str(e) or "quota" in str(e).lower():
                 print(f"Key exhausted, trying next...")
@@ -126,63 +130,60 @@ def fetch_thumbnail():
         return ""
 
 # --- Main ---
-import time
-
 def main():
     print(f"Generating article for keyword: {keyword}")
-    
+
     for attempt in range(3):
         try:
             # Generate
             draft = generate_with_fallback(generation_prompt())
-            
+
             # Validate frontmatter
             if not validate_frontmatter(draft):
                 print("Frontmatter missing, retrying...")
                 continue
-            
+
             # Check keyword density
             if not check_keyword_density(draft, keyword):
                 print("Keyword density off, retrying...")
                 continue
-            
+
             # Check duplicate
             if is_duplicate(draft):
                 print("Too similar to existing article, retrying...")
                 continue
-            
-            # Review with Flash (using same fallback)
+
+            # Review
             print("Reviewing article...")
             reviewed = generate_with_fallback(review_prompt(draft))
-            
+
             # Fetch thumbnail
             thumbnail = fetch_thumbnail()
-            
+
             # Add thumbnail to frontmatter
             if thumbnail:
                 reviewed = reviewed.replace(
                     f'date: {date_str}',
                     f'date: {date_str}\nimage: "{thumbnail}"'
                 )
-            
+
             # Save
             os.makedirs("content/posts", exist_ok=True)
             filename = f"content/posts/{date_str}-{random.randint(1000,9999)}.md"
             with open(filename, "w", encoding="utf-8") as f:
                 f.write(reviewed)
-            
+
             print(f"Article saved: {filename}")
-            
-            # Set output for GitHub Actions
+
             with open(os.environ.get("GITHUB_ENV", "/dev/null"), "a") as f:
                 f.write(f"ARTICLE_COUNT=1\n")
-            
+
             return
-            
+
         except Exception as e:
             print(f"Attempt {attempt+1} failed: {e}")
             time.sleep(2 ** attempt)
-    
+
     raise Exception("Failed after 3 attempts")
 
 if __name__ == "__main__":
