@@ -7,7 +7,7 @@ date_str = datetime.date.today().isoformat()
 keyword = random.choice(CONFIG["keywords"])
 
 def call_gemini(prompt, api_key):
-    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={api_key}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
     r = requests.post(url, json={"contents":[{"parts":[{"text":prompt}]}]}, timeout=60)
     if r.status_code == 429:
         raise Exception("429")
