@@ -1,7 +1,7 @@
 import requests, os, datetime, random, shutil, time
 from difflib import SequenceMatcher
 OPENROUTER_KEY = os.environ["OPENROUTER_KEY"]
-MODEL = "openrouter/auto"
+MODEL = "meta-llama/llama-3.3-70b-instruct:free"
 CONFIG = {"domain":"anwaltsagent.de","niche":"Rechtsberatung","geo":"Deutschland","audience":"Unternehmen und Privatpersonen","keywords":["Anwalt finden Deutschland","Rechtsanwalt beauftragen online","Anwaltssuche Deutschland","guenstige Rechtsberatung online","Anwalt Erstberatung Kosten","bester Anwalt Deutschland finden"]}
 date_str = datetime.date.today().isoformat()
 keyword = random.choice(CONFIG["keywords"])
