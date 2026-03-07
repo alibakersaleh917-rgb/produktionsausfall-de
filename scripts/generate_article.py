@@ -11,9 +11,8 @@ import requests
 OPENROUTER_KEY = os.environ["OPENROUTER_KEY"]
 UNSPLASH_KEY = os.environ["UNSPLASH_KEY"]
 
-WRITER_MODEL = "google/gemini-2.0-flash-lite-001"
+WRITER_MODEL = "google/gemini-2.0-flash-001"
 REVIEW_MODEL = "mistralai/mistral-small-24b-instruct-2501"
-
 CONFIG = {
     "domain": "anwaltsagent.de",
     "niche": "Rechtsberatung",
