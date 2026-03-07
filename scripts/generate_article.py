@@ -174,29 +174,66 @@ def fetch_unsplash_image(keyword: str, slug: str) -> str:
 def normalize_article(article: str, image_path: str = "") -> str:
     article = extract_markdown_block(article)
 
-    if "---" in article:
-        article = article[article.find("---"):].strip()
+    if "---" not in article:
+        raise ValueError("No frontmatter found")
 
-    parsed, body = parse_frontmatter(article)
+    start = article.find("---")
+    article = article[start:].strip()
 
-    if not parsed or not body:
-        raise ValueError("Invalid article structure")
+    parts = article.split("---", 2)
+    if len(parts) < 3:
+        raise ValueError("Invalid frontmatter structure")
 
-    title = parsed["title"] or f"{KEYWORD} – Ratgeber und Tipps"
-    description = parsed["description"] or f"Erfahren Sie mehr über {KEYWORD} auf {CONFIG['domain']}."
-    keywords_line = normalize_keywords_line(parsed["keywords_line"], KEYWORD)
-    date_value = TODAY
+    raw_frontmatter = parts[1].strip()
+    body = parts[2].strip()
+
+    def grab(pattern: str, default: str = "") -> str:
+        m = re.search(pattern, raw_frontmatter, re.MULTILINE)
+        return m.group(1).strip() if m else default
+
+    title = grab(r'^title:\s*["\']?(.*?)["\']?$') or f"{KEYWORD} – Ratgeber und Tipps"
+    description = grab(r'^description:\s*["\']?(.*?)["\']?$') or f"Erfahren Sie mehr über {KEYWORD} auf {CONFIG['domain']}."
+    keywords_line = grab(r'^keywords:\s*(.*?)$')
+    keywords_line = normalize_keywords_line(keywords_line, KEYWORD)
+
+    # احذف أي شرح زائد من بداية body
+    junk_prefixes = [
+        "hier ist der optimierte artikel",
+        "hier ist der überarbeitete artikel",
+        "hier ist die optimierte version",
+        "hier ist die verbesserte version",
+        "improved article",
+        "optimized article",
+        "überarbeiteter artikel",
+    ]
+
+    body_lower = body.lower().strip()
+    for prefix in junk_prefixes:
+        if body_lower.startswith(prefix):
+            split_pos = body.find("\n")
+            if split_pos != -1:
+                body = body[split_pos:].strip()
+            break
+
+    # احذف أي frontmatter مطبوع داخل body
+    body = re.sub(r'^title:\s*.*$', '', body, flags=re.MULTILINE)
+    body = re.sub(r'^date:\s*.*$', '', body, flags=re.MULTILINE)
+    body = re.sub(r'^description:\s*.*$', '', body, flags=re.MULTILINE)
+    body = re.sub(r'^keywords:\s*.*$', '', body, flags=re.MULTILINE)
+
+    # احذف أي أسطر فارغة كثيرة
+    body = re.sub(r'\n{3,}', '\n\n', body).strip()
 
     image_block = f'image: "{image_path}"\n' if image_path else ""
 
     clean = f"""---
 title: "{title}"
-date: "{date_value}"
+date: "{TODAY}"
 description: "{description}"
 keywords: {keywords_line}
 {image_block}---
 
-{body.strip()}
+{body}
 """
     return clean
 
