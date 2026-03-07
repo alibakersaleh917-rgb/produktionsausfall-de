@@ -29,6 +29,7 @@ jobs:
         run: python scripts/generate_article.py
         env:
           OPENROUTER_KEY: ${{ secrets.OPENROUTER_KEY }}
+          UNSPLASH_KEY: ${{ secrets.UNSPLASH_KEY }}
 
       - name: Get latest article info
         id: article
@@ -47,7 +48,7 @@ jobs:
         run: |
           git config user.name "AutoBot"
           git config user.email "bot@noreply.com"
-          git add content/posts/ || true
+          git add content/posts/ static/images/ || true
           git diff --cached --quiet || git commit -m "auto: article $(date +%Y-%m-%d)"
           git push
 
