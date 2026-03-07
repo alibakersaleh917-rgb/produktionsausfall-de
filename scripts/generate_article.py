@@ -13,6 +13,7 @@ UNSPLASH_KEY = os.environ["UNSPLASH_KEY"]
 
 WRITER_MODEL = "google/gemini-2.0-flash-001"
 REVIEW_MODEL = "mistralai/mistral-small-24b-instruct-2501"
+
 CONFIG = {
     "domain": "anwaltsagent.de",
     "niche": "Rechtsberatung",
@@ -171,16 +172,62 @@ def fetch_unsplash_image(keyword: str, slug: str) -> str:
     return f"/images/{filename}"
 
 
+def strip_junk_prefix(body: str) -> str:
+    junk_prefixes = [
+        "hier ist der optimierte artikel",
+        "hier ist der überarbeitete artikel",
+        "hier ist die optimierte version",
+        "hier ist die verbesserte version",
+        "hier ist der verbesserte artikel",
+        "improved article",
+        "optimized article",
+        "überarbeiteter artikel",
+    ]
+
+    body_clean = body.strip()
+    body_lower = body_clean.lower()
+
+    for prefix in junk_prefixes:
+        if body_lower.startswith(prefix):
+            split_pos = body_clean.find("\n")
+            if split_pos != -1:
+                body_clean = body_clean[split_pos:].strip()
+            break
+
+    return body_clean
+
+
+def strip_frontmatter_lines_from_body(body: str) -> str:
+    body = re.sub(r'^title:\s*.*$', '', body, flags=re.MULTILINE)
+    body = re.sub(r'^date:\s*.*$', '', body, flags=re.MULTILINE)
+    body = re.sub(r'^description:\s*.*$', '', body, flags=re.MULTILINE)
+    body = re.sub(r'^keywords:\s*.*$', '', body, flags=re.MULTILINE)
+    return body
+
+
+def ensure_domain_cta(body: str) -> str:
+    cta_phrase = "Anwaltsagent.de"
+    if cta_phrase.lower() in body.lower():
+        return body.strip()
+
+    cta = (
+        "\n\n---\n\n"
+        "Wenn Sie eine Marke für Legal-Tech, digitale Rechtsberatung oder "
+        "Mandantenvermittlung in Deutschland aufbauen möchten, kann "
+        "**Anwaltsagent.de** eine starke und einprägsame Domain für Ihr Projekt sein."
+    )
+    return body.strip() + cta
+
+
 def normalize_article(article: str, image_path: str = "") -> str:
     article = extract_markdown_block(article)
 
     if "---" not in article:
         raise ValueError("No frontmatter found")
 
-    start = article.find("---")
-    article = article[start:].strip()
-
+    article = article[article.find("---"):].strip()
     parts = article.split("---", 2)
+
     if len(parts) < 3:
         raise ValueError("Invalid frontmatter structure")
 
@@ -196,33 +243,10 @@ def normalize_article(article: str, image_path: str = "") -> str:
     keywords_line = grab(r'^keywords:\s*(.*?)$')
     keywords_line = normalize_keywords_line(keywords_line, KEYWORD)
 
-    # احذف أي شرح زائد من بداية body
-    junk_prefixes = [
-        "hier ist der optimierte artikel",
-        "hier ist der überarbeitete artikel",
-        "hier ist die optimierte version",
-        "hier ist die verbesserte version",
-        "improved article",
-        "optimized article",
-        "überarbeiteter artikel",
-    ]
-
-    body_lower = body.lower().strip()
-    for prefix in junk_prefixes:
-        if body_lower.startswith(prefix):
-            split_pos = body.find("\n")
-            if split_pos != -1:
-                body = body[split_pos:].strip()
-            break
-
-    # احذف أي frontmatter مطبوع داخل body
-    body = re.sub(r'^title:\s*.*$', '', body, flags=re.MULTILINE)
-    body = re.sub(r'^date:\s*.*$', '', body, flags=re.MULTILINE)
-    body = re.sub(r'^description:\s*.*$', '', body, flags=re.MULTILINE)
-    body = re.sub(r'^keywords:\s*.*$', '', body, flags=re.MULTILINE)
-
-    # احذف أي أسطر فارغة كثيرة
+    body = strip_junk_prefix(body)
+    body = strip_frontmatter_lines_from_body(body)
     body = re.sub(r'\n{3,}', '\n\n', body).strip()
+    body = ensure_domain_cta(body)
 
     image_block = f'image: "{image_path}"\n' if image_path else ""
 
@@ -292,6 +316,8 @@ ANFORDERUNGEN:
 - Schreibe informativ, klar und professionell.
 - Vermeide Wiederholungen.
 - Gib konkrete, praktische Informationen statt leerer Allgemeinplätze.
+- Der Artikel darf nicht mit Meta-Kommentaren beginnen.
+- Schreibe keinen Satz wie "Hier ist der Artikel" oder ähnliche Hinweise.
 
 WICHTIG FÜR DIE DOMAIN-STRATEGIE:
 Baue am Ende des Artikels eine kurze und natürliche Erwähnung ein, dass die Domain {CONFIG["domain"]} eine interessante Marke für Legal-Tech Plattformen, digitale Rechtsberatung oder Mandantenvermittlung in Deutschland sein kann.
@@ -322,6 +348,8 @@ REGELN:
 - Gib nur Markdown zurück.
 - Verbessere Lesbarkeit, Klarheit und Natürlichkeit.
 - Entferne Füllsätze und typische KI-Formulierungen.
+- Entferne jede Meta-Erklärung wie "Hier ist der optimierte Artikel".
+- Es darf kein YAML-Text doppelt im Fließtext erscheinen.
 - Stelle sicher, dass das Hauptkeyword "{keyword}" natürlich ungefähr 3 bis 5 Mal vorkommt.
 - Erhalte die Struktur des Artikels.
 - Ändere das Datum nicht.
