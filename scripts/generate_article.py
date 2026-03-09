@@ -139,14 +139,67 @@ def normalize_keywords_line(keywords_line: str, fallback_keyword: str) -> str:
     return f'["{fallback_keyword}"]'
 
 
+def _score_unsplash_candidate(candidate: dict, keyword: str) -> int:
+    score = 0
+
+    location = candidate.get("location") or {}
+    country = (location.get("country") or "").lower()
+    city = (location.get("city") or "").lower()
+
+    if "germany" in country or "deutschland" in country:
+        score += 35
+    elif country:
+        score -= 5
+
+    if city in {"berlin", "hamburg", "münchen", "munich", "köln", "frankfurt"}:
+        score += 10
+
+    title_blob = " ".join(
+        [
+            candidate.get("description") or "",
+            candidate.get("alt_description") or "",
+            keyword,
+        ]
+    ).lower()
+
+    legal_signals = [
+        "law",
+        "legal",
+        "lawyer",
+        "attorney",
+        "justice",
+        "court",
+        "rechts",
+        "anwalt",
+        "kanzlei",
+    ]
+    if any(signal in title_blob for signal in legal_signals):
+        score += 20
+
+    if "germany" in title_blob or "deutschland" in title_blob or "deutsch" in title_blob:
+        score += 15
+
+    if "flag" in title_blob and "germany" not in title_blob:
+        score -= 10
+
+    score += int(candidate.get("width", 0) >= 1600)
+    score += int(candidate.get("height", 0) >= 900)
+
+    return score
+
+
 def fetch_unsplash_image(keyword: str, slug: str) -> str:
     IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+
+    better_query = f"{keyword} Germany law office legal consultation"
 
     response = requests.get(
         "https://api.unsplash.com/photos/random",
         params={
-            "query": keyword,
+            "query": better_query,
             "orientation": "landscape",
+            "content_filter": "high",
+            "count": 8,
             "client_id": UNSPLASH_KEY,
         },
         timeout=60,
@@ -156,7 +209,16 @@ def fetch_unsplash_image(keyword: str, slug: str) -> str:
         raise Exception(f"Unsplash error: {response.status_code} {response.text[:300]}")
 
     data = response.json()
-    image_url = data["urls"]["regular"]
+    candidates = data if isinstance(data, list) else [data]
+
+    if not candidates:
+        raise Exception("Unsplash returned no image candidates")
+
+    best = max(candidates, key=lambda c: _score_unsplash_candidate(c, keyword))
+    image_url = best["urls"].get("regular") or best["urls"].get("full")
+
+    if not image_url:
+        raise Exception("Unsplash image URL missing")
 
     image_response = requests.get(image_url, stream=True, timeout=60)
     if image_response.status_code != 200:

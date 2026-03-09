@@ -5,909 +5,401 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Anwaltsagent.de — Premium-Domain für Legal-Tech</title>
   <meta name="description" content="Anwaltsagent.de ist eine Premium-Domain für Legal-Tech, Anwaltsvermittlung und digitale Rechtsberatung in Deutschland.">
-
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
-      --bg: #f5f7fb;
-      --surface: #ffffff;
-      --surface-soft: #f8fafc;
-      --text: #111827;
-      --muted: #6b7280;
-      --line: #e5e7eb;
-      --brand: #e94560;
-      --brand-dark: #d73753;
-      --hero-a: #0f172a;
-      --hero-b: #16213e;
-      --hero-c: #0f3460;
-      --shadow: 0 14px 34px rgba(15, 23, 42, 0.07);
-      --shadow-hover: 0 20px 42px rgba(15, 23, 42, 0.12);
+      --bg: #070b16;
+      --bg-soft: #0d1324;
+      --panel: #121a2f;
+      --panel-2: #1a2642;
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #f7f9ff;
+      --muted: #a8b4d4;
+      --brand: #ff4f7d;
+      --brand-2: #8d7cff;
+      --ok: #4ade80;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
       --radius: 18px;
       --container: 1160px;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--bg);
+      font-family: Inter, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(circle at 20% -10%, #18233f 0, transparent 40%), var(--bg);
       color: var(--text);
-      line-height: 1.6;
+      line-height: 1.65;
     }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
 
-    a {
-      text-decoration: none;
-      color: inherit;
+    .container { width: min(var(--container), 92%); margin: 0 auto; }
+    .section { padding: 88px 0; }
+    .section-title { font-size: clamp(32px, 5vw, 48px); line-height: 1.08; margin-bottom: 14px; }
+    .section-subtitle { color: var(--muted); max-width: 820px; font-size: 18px; }
+
+    .header {
+      position: sticky; top: 0; z-index: 80;
+      backdrop-filter: blur(12px);
+      background: rgba(7, 11, 22, 0.72);
+      border-bottom: 1px solid var(--line);
     }
-
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
-    .container {
-      max-width: var(--container);
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    .section {
-      padding: 84px 0;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: 36px;
-      font-weight: 800;
-      line-height: 1.15;
-      margin-bottom: 16px;
-      color: var(--text);
-    }
-
-    .section-subtitle {
-      text-align: center;
-      max-width: 760px;
-      margin: 0 auto 48px;
-      color: var(--muted);
-      font-size: 17px;
-      line-height: 1.75;
-    }
-
-    header {
-      background: rgba(15, 23, 42, 0.94);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      backdrop-filter: blur(10px);
-    }
-
     .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      min-height: 70px;
+      height: 72px;
+      display: flex; align-items: center; justify-content: space-between;
     }
-
-    .brand {
-      color: #fff;
-      font-size: 21px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-    }
-
-    .nav {
-      display: flex;
-      gap: 22px;
-      align-items: center;
-    }
-
-    .nav a {
-      color: #cbd5e1;
-      font-size: 15px;
-      font-weight: 600;
-      transition: 0.2s ease;
-    }
-
-    .nav a:hover {
-      color: white;
-    }
-
+    .brand { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+    .brand span { color: var(--brand); }
+    .nav { display: flex; align-items: center; gap: 22px; color: var(--muted); }
+    .nav a:hover { color: white; }
     .nav-cta {
-      display: inline-block;
-      padding: 11px 16px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: white; padding: 10px 14px; border-radius: 10px; font-weight: 700;
     }
 
     .hero {
-      position: relative;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at top left, rgba(233,69,96,0.18), transparent 28%),
-        radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 22%),
-        linear-gradient(135deg, var(--hero-a) 0%, var(--hero-b) 54%, var(--hero-c) 100%);
-      color: white;
-      padding: 112px 0 96px;
+      padding: 96px 0 72px;
+      border-bottom: 1px solid var(--line);
     }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: auto auto 0 0;
-      width: 100%;
-      height: 120px;
-      background: linear-gradient(to top, rgba(255,255,255,0.03), transparent);
-      pointer-events: none;
-    }
-
     .hero-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 40px;
+      display: grid; gap: 36px;
+      grid-template-columns: 1.15fr 0.85fr;
       align-items: center;
-      position: relative;
-      z-index: 1;
     }
-
     .eyebrow {
-      display: inline-block;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #ffd7de;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 999px;
-      padding: 8px 12px;
-      margin-bottom: 20px;
+      display: inline-flex; gap: 10px; align-items: center;
+      border: 1px solid var(--line); border-radius: 999px;
+      padding: 8px 14px; color: #ffd7e2; margin-bottom: 18px;
+      background: rgba(255, 79, 125, 0.1);
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
     }
-
-    .hero h1 {
-      font-size: 68px;
-      line-height: 1.02;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      margin-bottom: 22px;
-    }
-
-    .hero h1 span {
-      color: var(--brand);
-    }
-
-    .hero p {
-      font-size: 22px;
-      line-height: 1.75;
-      color: #dbe4ff;
-      max-width: 760px;
-      margin-bottom: 28px;
-    }
-
-    .hero-points {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 6px;
-    }
-
+    .hero h1 { font-size: clamp(44px, 8vw, 76px); line-height: 0.98; margin-bottom: 18px; letter-spacing: -0.04em; }
+    .hero h1 strong { color: var(--brand); }
+    .hero p { color: var(--muted); font-size: 20px; margin-bottom: 26px; max-width: 780px; }
+    .hero-points { display: flex; flex-wrap: wrap; gap: 12px; }
     .hero-point {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      color: #dbe4ff;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 999px;
-      padding: 10px 14px;
-    }
-
-    .trust-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 22px;
-    }
-
-    .trust-chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #e9efff;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid var(--line); border-radius: 999px;
+      padding: 9px 12px; color: #d4dcf5; font-size: 14px;
+      background: rgba(255,255,255,0.03);
     }
 
     .hero-card {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 22px;
-      padding: 28px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+      background: linear-gradient(165deg, rgba(141,124,255,0.22), rgba(255,79,125,0.16));
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 22px; padding: 24px; box-shadow: var(--shadow);
     }
+    .hero-card h2 { font-size: 28px; margin-bottom: 12px; }
+    .hero-card p { color: #e7ecff; margin-bottom: 16px; }
+    .hero-card ul { padding-left: 18px; color: #f1f4ff; }
 
-    .hero-card-label {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      font-weight: 800;
-      color: #ffc9d2;
-      margin-bottom: 12px;
+    .value-grid {
+      margin-top: 28px;
+      display: grid; gap: 18px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-
-    .hero-card h2 {
-      font-size: 28px;
-      line-height: 1.2;
-      font-weight: 800;
-      margin-bottom: 16px;
-    }
-
-    .hero-card p {
-      font-size: 16px;
-      line-height: 1.8;
-      color: #dbe4ff;
-      margin-bottom: 22px;
-    }
-
-    .hero-card-list {
-      list-style: none;
-      display: grid;
-      gap: 12px;
-    }
-
-    .hero-card-list li {
-      color: #edf2ff;
-      font-size: 15px;
-      line-height: 1.7;
-      padding-left: 18px;
-      position: relative;
-    }
-
-    .hero-card-list li::before {
-      content: "•";
-      position: absolute;
-      left: 0;
-      color: #ff9bab;
-      font-weight: 700;
-    }
-
-    .value {
-      background: white;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-
-    .card {
-      background: var(--surface-soft);
+    .value-card {
       border: 1px solid var(--line);
-      border-top: 4px solid var(--brand);
       border-radius: var(--radius);
-      padding: 30px;
+      background: linear-gradient(150deg, var(--panel), var(--panel-2));
+      padding: 22px;
+      transition: transform .3s ease, border-color .3s ease;
+    }
+    .value-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.28); }
+    .value-card h3 { margin-bottom: 8px; font-size: 22px; }
+    .value-card p { color: var(--muted); }
+
+    .story-wrap {
+      margin-top: 28px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: linear-gradient(180deg, #0d1426, #0a1020);
+      overflow: hidden;
+      position: relative;
+      min-height: 420px;
       box-shadow: var(--shadow);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .story-sticky { position: sticky; top: 86px; min-height: 420px; display: grid; place-items: center; }
+    .story-keyboard {
+      width: min(620px, 92%);
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 8px;
+      transform: translateY(0) scale(1);
+      transition: transform .25s linear;
+    }
+    .key {
+      height: 34px; border-radius: 7px;
+      background: linear-gradient(180deg, #2a375f, #1a2747);
+      border: 1px solid rgba(255,255,255,0.12);
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .story-caption {
+      position: absolute; left: 22px; bottom: 18px; right: 22px;
+      color: #cbd5f5; font-size: 14px;
     }
 
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-hover);
+    .posts-controls {
+      margin-top: 26px;
+      display: flex; gap: 12px; align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+      padding: 12px 14px;
     }
-
-    .card h3 {
-      font-size: 19px;
-      margin-bottom: 12px;
-      line-height: 1.25;
+    .posts-controls input {
+      width: 100%;
+      background: transparent;
+      border: none;
       color: var(--text);
-    }
-
-    .card p {
-      color: #4b5563;
-      font-size: 15px;
-      line-height: 1.8;
-    }
-
-    .posts {
-      background: #eef2f7;
+      font-size: 16px;
+      outline: none;
     }
 
     .post-list {
-      display: grid;
-      gap: 22px;
-      max-width: 980px;
-      margin: 0 auto;
+      margin-top: 18px;
+      display: grid; gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-
     .post-card {
-      position: relative;
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      background: white;
-      border: 1px solid rgba(229, 231, 235, 0.95);
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
-    }
-
-    .post-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(233,69,96,0.22), rgba(37,99,235,0.10), transparent 55%);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-    }
-
-    .post-card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-hover);
-      border-color: rgba(233, 69, 96, 0.18);
-    }
-
-    .post-media {
-      background: #dbe3ef;
-      min-height: 190px;
-      overflow: hidden;
-    }
-
-    .post-media img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.35s ease;
-    }
-
-    .post-card:hover .post-media img {
-      transform: scale(1.04);
-    }
-
-    .post-content {
-      padding: 24px 24px 22px;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .post-badge {
-      display: inline-block;
-      width: fit-content;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--brand);
-      background: #fff1f4;
-      border-radius: 999px;
-      padding: 7px 11px;
-      margin-bottom: 14px;
-    }
-
-    .post-title {
-      font-size: 24px;
-      line-height: 1.3;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 10px;
-      overflow-wrap: break-word;
-      word-break: break-word;
-    }
-
-    .post-card:hover .post-title {
-      color: var(--brand);
-    }
-
-    .post-subtext {
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.75;
-      margin-bottom: 18px;
-      overflow-wrap: break-word;
-      word-break: break-word;
-    }
-
-    .post-action {
-      color: #2563eb;
-      font-size: 14px;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .contact {
-      background: white;
-    }
-
-    .contact-box {
-      max-width: 860px;
-      margin: 0 auto;
-      background: var(--surface-soft);
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 34px;
-      box-shadow: var(--shadow);
-    }
-
-    .contact-intro {
-      text-align: center;
-      color: #4b5563;
-      margin-bottom: 28px;
-      font-size: 17px;
-      line-height: 1.8;
-    }
-
-    .contact-list {
-      list-style: none;
-      display: grid;
-      gap: 16px;
-    }
-
-    .contact-item {
-      background: white;
       border: 1px solid var(--line);
       border-radius: 16px;
-      padding: 20px 22px;
+      background: var(--panel);
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      overflow: hidden;
+      transition: transform .25s ease, border-color .25s ease;
+    }
+    .post-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.3); }
+    .post-media { background: linear-gradient(160deg, #212f56, #15203a); min-height: 100%; }
+    .post-media img { width: 100%; height: 100%; object-fit: cover; }
+    .post-content { padding: 16px; }
+    .post-title { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+    .post-subtext { color: var(--muted); font-size: 15px; margin-bottom: 10px; }
+    .post-action { color: #ffd7e2; font-weight: 700; }
+    .hidden { display: none !important; }
+
+    .empty-state {
+      margin-top: 18px; border: 1px dashed var(--line);
+      border-radius: 14px; padding: 20px;
+      color: var(--muted); background: rgba(255,255,255,0.02);
     }
 
-    .contact-item strong {
-      display: block;
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 7px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px) scale(0.98);
+      transition: .7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
 
-    .contact-item a,
-    .contact-item span {
-      color: var(--text);
-      font-size: 17px;
-      font-weight: 700;
-      word-break: break-word;
-    }
+    footer { border-top: 1px solid var(--line); padding: 20px 0; color: #95a4cb; text-align: center; }
 
-    .contact-item a:hover {
-      color: var(--brand);
-    }
-
-    .cta-bottom {
-      background:
-        radial-gradient(circle at top left, rgba(233,69,96,0.13), transparent 24%),
-        linear-gradient(135deg, #0f172a 0%, #16213e 58%, #0f3460 100%);
-      color: white;
-      padding: 84px 0;
-    }
-
-    .cta-panel {
-      max-width: 980px;
-      margin: 0 auto;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 26px;
-      padding: 40px 32px;
-      box-shadow: 0 18px 40px rgba(0,0,0,0.18);
-      text-align: center;
-    }
-
-    .cta-panel h2 {
-      font-size: 38px;
-      line-height: 1.15;
-      font-weight: 900;
-      margin-bottom: 14px;
-    }
-
-    .cta-panel p {
-      max-width: 780px;
-      margin: 0 auto 28px;
-      color: #dbe4ff;
-      font-size: 18px;
-      line-height: 1.8;
-    }
-
-    .cta-buttons {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .cta-buy,
-    .cta-contact {
-      display: inline-block;
-      padding: 16px 26px;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 800;
-      transition: 0.2s ease;
-    }
-
-    .cta-buy {
-      background: var(--brand);
-      color: white;
-      box-shadow: 0 10px 25px rgba(233, 69, 96, 0.26);
-    }
-
-    .cta-buy:hover {
-      background: var(--brand-dark);
-      transform: translateY(-2px);
-    }
-
-    .cta-contact {
-      border: 2px solid rgba(255,255,255,0.24);
-      color: white;
-      background: transparent;
-    }
-
-    .cta-contact:hover {
-      border-color: white;
-      transform: translateY(-2px);
-    }
-
-    .mobile-sticky-cta {
-      display: none;
-    }
-
-    footer {
-      background: #0b1220;
-      color: #cbd5e1;
-      text-align: center;
-      padding: 24px;
-      font-size: 14px;
-    }
-
-    @media (max-width: 980px) {
-      .hero-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .cards {
-        grid-template-columns: 1fr;
-      }
-
-      .hero h1 {
-        font-size: 52px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .topbar {
-        min-height: 64px;
-      }
-
-      .nav {
-        display: none;
-      }
-
-      .hero {
-        padding: 88px 0 74px;
-      }
-
-      .hero h1 {
-        font-size: 40px;
-      }
-
-      .hero p {
-        font-size: 18px;
-      }
-
-      .section {
-        padding: 66px 0;
-      }
-
-      .section-title {
-        font-size: 30px;
-      }
-
-      .post-card {
-        grid-template-columns: 1fr;
-      }
-
-      .post-media {
-        min-height: 210px;
-      }
-
-      .post-title {
-        font-size: 21px;
-      }
-
-      .cta-panel {
-        padding: 30px 20px;
-      }
-
-      .cta-panel h2 {
-        font-size: 30px;
-      }
-
-      .cta-panel p {
-        font-size: 16px;
-      }
-
-      .mobile-sticky-cta {
-        display: flex;
-        position: fixed;
-        left: 12px;
-        right: 12px;
-        bottom: 12px;
-        z-index: 50;
-        gap: 10px;
-        padding: 10px;
-        border-radius: 16px;
-        background: rgba(15, 23, 42, 0.94);
-        backdrop-filter: blur(12px);
-        box-shadow: 0 18px 34px rgba(0,0,0,0.22);
-      }
-
-      .mobile-sticky-cta a {
-        flex: 1;
-        text-align: center;
-        padding: 13px 12px;
-        border-radius: 12px;
-        font-size: 14px;
-        font-weight: 800;
-      }
-
-      .mobile-sticky-buy {
-        background: var(--brand);
-        color: white;
-      }
-
-      .mobile-sticky-contact {
-        background: rgba(255,255,255,0.08);
-        color: white;
-        border: 1px solid rgba(255,255,255,0.14);
-      }
-
-      footer {
-        padding-bottom: 92px;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .hero h1 {
-        font-size: 34px;
-      }
-
-      .hero p {
-        font-size: 17px;
-      }
-
-      .section-title {
-        font-size: 27px;
-      }
-
-      .cta-buy,
-      .cta-contact {
-        width: 100%;
-        max-width: 340px;
-      }
-
-      .contact-box {
-        padding: 24px 18px;
-      }
-
-      .post-content {
-        padding: 18px;
-      }
-
-      .post-title {
-        font-size: 19px;
-      }
+    @media (max-width: 920px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .value-grid, .post-list { grid-template-columns: 1fr; }
+      .post-card { grid-template-columns: 1fr; }
+      .post-media { height: 180px; }
+      .nav a { display: none; }
     }
   </style>
 </head>
 <body>
-
-  <header>
+  <header class="header">
     <div class="container topbar">
-      <a href="/" class="brand">Anwaltsagent.de</a>
-
+      <a href="#" class="brand">Anwalts<span>agent</span>.de</a>
       <nav class="nav">
         <a href="#vorteile">Vorteile</a>
         <a href="#beitraege">Beiträge</a>
-        <a href="#kontakt">Kontakt</a>
-        <a href="#kaufen" class="nav-cta">Domain kaufen</a>
+        <a href="#scroll">Animation</a>
+        <a href="#kontakt" class="nav-cta">Kontakt</a>
       </nav>
     </div>
   </header>
 
-  <section class="hero">
+  <section class="hero reveal">
     <div class="container hero-grid">
       <div>
         <div class="eyebrow">Premium Legal-Tech Domain</div>
-        <h1>Anwalts<span>agent</span>.de</h1>
+        <h1>Ein starker Name für <strong>digitale Rechtsberatung</strong></h1>
         <p>
-          Eine starke, sofort einsetzbare Premium-Domain für Legal-Tech,
-          Anwaltsvermittlung und digitale Rechtsberatung im deutschen Markt.
+          Anwaltsagent.de verbindet Marke, Klarheit und Suchrelevanz in Deutschland.
+          Ideal für Legal-Tech, Mandantenvermittlung und moderne Kanzlei-Services.
         </p>
-
         <div class="hero-points">
-          <div class="hero-point">Sofort verfügbar</div>
-          <div class="hero-point">Starker Markenname</div>
-          <div class="hero-point">Ideal für DACH Legal-Tech</div>
-        </div>
-
-        <div class="trust-strip">
-          <div class="trust-chip">SEO-Grundlage vorhanden</div>
-          <div class="trust-chip">Content bereits aufgebaut</div>
-          <div class="trust-chip">Direkt übertragbar</div>
+          <span class="hero-point">Sofort einsatzbereit</span>
+          <span class="hero-point">SEO-fähige Struktur</span>
+          <span class="hero-point">Brand mit Marktfit</span>
         </div>
       </div>
-
       <div class="hero-card">
-        <div class="hero-card-label">Warum diese Domain?</div>
-        <h2>Marke, Vertrauen und Marktfit in einer Domain</h2>
-        <p>
-          Anwaltsagent.de verbindet eine klare Bedeutung mit hoher Markt-Relevanz.
-          Die Domain eignet sich für Plattformen, digitale Vermittlungsmodelle,
-          Lead-Gen-Projekte und moderne Rechtsservices.
-        </p>
-
-        <ul class="hero-card-list">
-          <li>Einprägsamer Name mit klarem Bezug zum Rechtsmarkt</li>
-          <li>Passend für Legal-Tech, Kanzlei-Marketing und Mandantenakquise</li>
-          <li>Bereits mit Content und SEO-Grundlage aufgebaut</li>
+        <h2>Warum Käufer diese Domain schätzen</h2>
+        <p>Klare Botschaft, hohe Erinnerbarkeit und passende Zielgruppe für den DACH-Rechtsmarkt.</p>
+        <ul>
+          <li>Perfekt für Leads und Plattformmodelle</li>
+          <li>Professionelle Außenwirkung für Investoren und Nutzer</li>
+          <li>Skalierbar als Content + Conversion System</li>
         </ul>
       </div>
     </div>
   </section>
 
-  <section class="section value" id="vorteile">
+  <section class="section reveal" id="vorteile">
     <div class="container">
-      <h2 class="section-title">Warum diese Domain?</h2>
-      <p class="section-subtitle">
-        Die Domain kombiniert einen klar verständlichen Markennamen mit einem starken
-        Einsatzbereich im deutschsprachigen Rechtsmarkt — ideal für Plattformen,
-        Vermittlungsdienste und digitale Kanzlei-Modelle.
-      </p>
-
-      <div class="cards">
-        <div class="card">
-          <h3>Starkes Keyword</h3>
-          <p>
-            „Anwaltsagent" verbindet Rechtsberatung mit Vermittlung —
-            ideal für Legal-Tech Plattformen, Lead-Modelle und moderne Mandantenakquise.
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>Deutscher Markt</h3>
-          <p>
-            Exklusiv auf den DACH-Rechtsmarkt ausgerichtet. Der Name passt perfekt
-            zu digitalen Services rund um Anwälte, Beratung und Vermittlung.
-          </p>
-        </div>
-
-        <div class="card">
-          <h3>Sofort einsetzbar</h3>
-          <p>
-            Mit bestehender SEO-Basis, aufgebauter Struktur und Content-Start
-            kann die Domain direkt produktiv weiterentwickelt werden.
-          </p>
-        </div>
+      <h2 class="section-title">Professionelle Landing-Experience</h2>
+      <p class="section-subtitle">Die Seite wurde auf klare Conversion, modernes Branding und bessere Content-Navigation optimiert.</p>
+      <div class="value-grid">
+        <article class="value-card">
+          <h3>Saubere UX</h3>
+          <p>Reduzierte Struktur, klare Leseführung und Fokus auf den Domain-Mehrwert.</p>
+        </article>
+        <article class="value-card">
+          <h3>Suche integriert</h3>
+          <p>Schnelles Filtern nach Artikel-Titel oder Beschreibung direkt auf der Startseite.</p>
+        </article>
+        <article class="value-card">
+          <h3>Scroll-Effekt</h3>
+          <p>Animierter Bereich, der beim Scrollen dynamisch reagiert und die Seite hochwertiger wirken lässt.</p>
+        </article>
       </div>
     </div>
   </section>
 
-  {{ if .Site.RegularPages }}
-  <section class="section posts" id="beitraege">
+  <section class="section reveal" id="scroll">
     <div class="container">
-      <h2 class="section-title">Aktuelle Beiträge</h2>
-      <p class="section-subtitle">
-        Ausgewählte Inhalte rund um Anwaltsuche, digitale Rechtsberatung und Legal-Tech.
-      </p>
-
-      <div class="post-list">
-        {{ range first 3 .Site.RegularPages }}
-        <a href="{{ .Permalink }}" class="post-card">
-          {{ if .Params.image }}
-          <div class="post-media">
-            <img src="{{ .Params.image }}" alt="{{ .Title }}">
+      <h2 class="section-title">Scroll Animation Showcase</h2>
+      <p class="section-subtitle">Ähnlich zur Idee aus dem Video: Die Darstellung wird beim Scrollen schrittweise „deconstructed“ statt als normales Video eingebettet.</p>
+      <div class="story-wrap" id="storyWrap">
+        <div class="story-sticky">
+          <div class="story-keyboard" id="storyKeyboard">
+            {{ range seq 1 84 }}<span class="key"></span>{{ end }}
           </div>
-          {{ else }}
-          <div class="post-media"></div>
-          {{ end }}
+        </div>
+        <p class="story-caption">Beim Scrollen zerlegt sich das Grid schrittweise — als moderner Motion-Look für Landing-Pages.</p>
+      </div>
+    </div>
+  </section>
 
-          <div class="post-content">
-            <div class="post-badge">Artikel</div>
-            <div class="post-title">{{ .Title }}</div>
-            {{ if .Description }}
-            <div class="post-subtext">{{ .Description }}</div>
-            {{ else }}
-            <div class="post-subtext">Zum vollständigen Artikel wechseln</div>
+  <section class="section reveal" id="beitraege">
+    <div class="container">
+      <h2 class="section-title">Beiträge durchsuchen</h2>
+      <p class="section-subtitle">Finde schnell bestimmte Artikel über Titel, Beschreibung oder Schlagwörter.</p>
+
+      <div class="posts-controls">
+        <span>🔎</span>
+        <input id="postSearch" type="search" placeholder="Nach Beitrag suchen…">
+      </div>
+
+      <div class="post-list" id="postList">
+        {{ range .Site.RegularPages.ByDate.Reverse }}
+        <a href="{{ .Permalink }}" class="post-card" data-search="{{ lower .Title }} {{ lower .Description }} {{ lower (delimit .Params.keywords " ") }}">
+          <div class="post-media">
+            {{ if .Params.image }}
+            <img src="{{ .Params.image }}" alt="{{ .Title }}">
             {{ end }}
+          </div>
+          <div class="post-content">
+            <h3 class="post-title">{{ .Title }}</h3>
+            <p class="post-subtext">{{ if .Description }}{{ .Description }}{{ else }}Zum vollständigen Artikel wechseln.{{ end }}</p>
             <div class="post-action">Artikel öffnen →</div>
           </div>
         </a>
         {{ end }}
       </div>
+
+      {{ if not .Site.RegularPages }}
+      <div class="empty-state">Aktuell sind keine Beiträge veröffentlicht. Neue SEO-Artikel erscheinen hier automatisch.</div>
+      {{ else }}
+      <div id="noResults" class="empty-state hidden">Keine Treffer. Bitte anderen Suchbegriff verwenden.</div>
+      {{ end }}
     </div>
   </section>
-  {{ end }}
 
-  <section class="section contact" id="kontakt">
+  <section class="section reveal" id="kontakt">
     <div class="container">
-      <h2 class="section-title">Kontakt</h2>
-
-      <div class="contact-box">
-        <p class="contact-intro">
-          Bei Interesse an <strong>Anwaltsagent.de</strong> erreichen Sie mich direkt
-          per E-Mail oder LinkedIn.
-        </p>
-
-        <ul class="contact-list">
-          <li class="contact-item">
-            <strong>E-Mail</strong>
-            <a href="mailto:alisalih.assets@gmail.com">alisalih.assets@gmail.com</a>
-          </li>
-
-          <li class="contact-item">
-            <strong>LinkedIn</strong>
-            <a href="https://www.linkedin.com/in/ali-salih-capital" target="_blank" rel="noopener noreferrer">
-              www.linkedin.com/in/ali-salih-capital
-            </a>
-          </li>
-
-          <li class="contact-item">
-            <strong>Hinweis</strong>
-            <span>Direktkauf oder Mieten mit Kaufoption über Sedo möglich.</span>
-          </li>
-        </ul>
+      <h2 class="section-title">Kontakt für Kaufanfrage</h2>
+      <p class="section-subtitle">Direktkauf oder Mieten mit Kaufoption über Sedo ist möglich.</p>
+      <div class="value-grid">
+        <article class="value-card">
+          <h3>E-Mail</h3>
+          <p><a href="mailto:alisalih.assets@gmail.com">alisalih.assets@gmail.com</a></p>
+        </article>
+        <article class="value-card">
+          <h3>LinkedIn</h3>
+          <p><a href="https://www.linkedin.com/in/ali-salih-capital" target="_blank" rel="noopener noreferrer">www.linkedin.com/in/ali-salih-capital</a></p>
+        </article>
+        <article class="value-card">
+          <h3>Sedo Listing</h3>
+          <p><a href="https://sedo.com/search/details/?partnerid=324561&language=ar&domain=anwaltsagent.de&origin=sales_lander_15&utm_medium=Parking&utm_campaign=offerpage" target="_blank" rel="noopener noreferrer">Domain auf Sedo ansehen</a></p>
+        </article>
       </div>
     </div>
   </section>
 
-  <section class="cta-bottom" id="kaufen">
-    <div class="container">
-      <div class="cta-panel">
-        <h2>Interesse an Anwaltsagent.de?</h2>
-        <p>
-          Diese Domain ist ideal für Legal-Tech Plattformen, digitale Rechtsberatung,
-          Kanzlei-Marketing oder Mandantenvermittlung. Wenn Sie einen starken Namen
-          für den deutschen Markt suchen, ist dies eine hochwertige Gelegenheit.
-        </p>
+  <footer>© Anwaltsagent.de 2026 — Premium-Domain für den deutschen Legal‑Tech Markt</footer>
 
-        <div class="cta-buttons">
-          <a href="https://sedo.com/search/details/?partnerid=324561&language=ar&domain=anwaltsagent.de&origin=sales_lander_15&utm_medium=Parking&utm_campaign=offerpage" class="cta-buy">
-            Über Sedo kaufen
-          </a>
+  <script>
+    (function () {
+      const searchInput = document.getElementById('postSearch');
+      const cards = Array.from(document.querySelectorAll('.post-card'));
+      const noResults = document.getElementById('noResults');
 
-          <a href="#kontakt" class="cta-contact">
-            Direkt kontaktieren
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+      if (searchInput && cards.length) {
+        searchInput.addEventListener('input', function () {
+          const q = (searchInput.value || '').toLowerCase().trim();
+          let visible = 0;
 
-  <div class="mobile-sticky-cta">
-    <a href="https://sedo.com/search/details/?partnerid=324561&language=ar&domain=anwaltsagent.de&origin=sales_lander_15&utm_medium=Parking&utm_campaign=offerpage" class="mobile-sticky-buy">
-      Kaufen
-    </a>
-    <a href="#kontakt" class="mobile-sticky-contact">
-      Kontakt
-    </a>
-  </div>
+          cards.forEach(function (card) {
+            const hay = card.getAttribute('data-search') || '';
+            const show = !q || hay.indexOf(q) !== -1;
+            card.classList.toggle('hidden', !show);
+            if (show) visible++;
+          });
 
-  <footer>
-    © Anwaltsagent.de 2026 — Premium-Domain für den deutschen Legal-Tech-Markt
-  </footer>
+          if (noResults) {
+            noResults.classList.toggle('hidden', visible !== 0);
+          }
+        });
+      }
 
+      const revealItems = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.18 });
+      revealItems.forEach((el) => observer.observe(el));
+
+      const wrap = document.getElementById('storyWrap');
+      const keyboard = document.getElementById('storyKeyboard');
+      const keys = keyboard ? Array.from(keyboard.querySelectorAll('.key')) : [];
+
+      function animateStory() {
+        if (!wrap || !keyboard || !keys.length) return;
+        const rect = wrap.getBoundingClientRect();
+        const viewport = window.innerHeight;
+        const total = rect.height + viewport;
+        const progress = Math.min(1, Math.max(0, (viewport - rect.top) / total));
+
+        keyboard.style.transform = `translateY(${progress * -28}px) scale(${1 - progress * 0.08})`;
+
+        keys.forEach((k, idx) => {
+          const wave = (idx % 12) / 12;
+          const local = Math.max(0, progress - wave * 0.35);
+          const shift = local * 55;
+          k.style.transform = `translateY(${shift}px) rotate(${local * 12}deg)`;
+          k.style.opacity = String(1 - local * 0.85);
+        });
+      }
+
+      window.addEventListener('scroll', animateStory, { passive: true });
+      window.addEventListener('resize', animateStory);
+      animateStory();
+    })();
+  </script>
 </body>
 </html>
