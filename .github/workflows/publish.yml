@@ -18,6 +18,13 @@ jobs:
         with:
           submodules: true
 
+      - name: Fail on unresolved merge conflict markers
+        run: |
+          if grep -R -n -E '^(<<<<<<<|=======|>>>>>>>)' -- .; then
+            echo "Unresolved merge conflict markers found."
+            exit 1
+          fi
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
