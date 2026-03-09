@@ -1,0 +1,23 @@
+    :root {
+      {{ partial "theme-vars.css" . }}
+      --article-bg: #ffffff;
+      --article-text: #111827;
+      --article-muted: #4b5563;
+      --article-top-link: #334155;
+      --article-top-border: #e5e7eb;
+      --article-label-bg: #fff1f4;
+    }
+    body { font-family: var(--article-font-family); margin: 0; background: var(--article-bg); color: var(--article-text); }
+    .top { padding: 16px 18px; border-bottom: 1px solid var(--article-top-border); display: flex; justify-content: center; gap: 14px; font-size: 14px; }
+    .top a { color: var(--article-top-link); text-decoration: none; font-weight: 700; }
+    .article-wrap { max-width: 860px; margin: 0 auto; padding: 42px 18px 70px; line-height: 1.8; }
+    .article-label { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: var(--article-label-bg); border-radius: 999px; padding: 7px 11px; margin-bottom: 18px; }
+    .article-title { font-size: 34px; line-height: 1.18; font-weight: 900; margin: 0 0 14px; }
+    .article-description { font-size: 18px; color: var(--article-muted); margin: 0 0 26px; }
+    .article-image { width: 100%; border-radius: 18px; margin-bottom: 30px; object-fit: cover; max-height: 430px; }
+    .article-content { font-size: 20px; color: var(--article-text); }
+    .article-content h1,.article-content h2,.article-content h3,.article-content h4 { line-height: 1.22; font-weight: 900; margin-top: 34px; margin-bottom: 16px; }
+    .article-soft-cta { margin-top: 38px; padding-top: 24px; border-top: 1px solid var(--article-top-border); }
+    .article-soft-links { display: flex; gap: 16px; flex-wrap: wrap; }
+    .article-soft-links a { font-size: 15px; font-weight: 800; color: var(--accent); text-decoration: none; }
+  
