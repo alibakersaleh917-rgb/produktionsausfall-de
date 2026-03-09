@@ -456,6 +456,7 @@
       .stats { grid-template-columns: 1fr; }
     }
   </style>
+  {{ partial "analytics.html" . }}
 </head>
 <body>
   <header class="header">
@@ -465,7 +466,7 @@
         <a href="#features">Features</a>
         <a href="#posts">Beiträge</a>
         <a href="#kontakt">Kontakt</a>
-        <a href="https://sedo.com/search/details/?partnerid=324561&language=ar&domain=anwaltsagent.de&origin=sales_lander_15&utm_medium=Parking&utm_campaign=offerpage" class="pill-btn" target="_blank" rel="noopener noreferrer">Domain kaufen</a>
+        <a href="https://sedo.com/search/details/?partnerid=324561&language=ar&domain=anwaltsagent.de&origin=sales_lander_15&utm_medium=Parking&utm_campaign=offerpage" onclick="gtag('event', 'domain_click', {'event_category': 'engagement', 'event_label': 'anwaltsagent.de'});" class="pill-btn" target="_blank" rel="noopener noreferrer">Domain kaufen</a>
       </nav>
     </div>
   </header>
@@ -481,7 +482,7 @@
         </p>
 
         <div class="hero-actions">
-          <a class="pill-btn" target="_blank" rel="noopener noreferrer" href="https://sedo.com/search/details/?partnerid=324561&language=ar&domain=anwaltsagent.de&origin=sales_lander_15&utm_medium=Parking&utm_campaign=offerpage">Jetzt über Sedo anfragen</a>
+          <a class="pill-btn" target="_blank" rel="noopener noreferrer" href="https://sedo.com/search/details/?partnerid=324561&language=ar&domain=anwaltsagent.de&origin=sales_lander_15&utm_medium=Parking&utm_campaign=offerpage" onclick="gtag('event', 'domain_click', {'event_category': 'engagement', 'event_label': 'anwaltsagent.de'});">Jetzt über Sedo anfragen</a>
           <a class="ghost-btn" href="#posts">Beiträge ansehen</a>
         </div>
 
@@ -589,7 +590,7 @@
       <p>Wenn Sie eine starke Marke für Legal-Tech, digitale Rechtsberatung oder Mandantenvermittlung in Deutschland aufbauen möchten, ist diese Domain ein hochwertiger Startpunkt.</p>
 
       <div class="cta-actions">
-        <a class="pill-btn" target="_blank" rel="noopener noreferrer" href="https://sedo.com/search/details/?partnerid=324561&language=ar&domain=anwaltsagent.de&origin=sales_lander_15&utm_medium=Parking&utm_campaign=offerpage">Über Sedo kaufen</a>
+        <a class="pill-btn" target="_blank" rel="noopener noreferrer" href="https://sedo.com/search/details/?partnerid=324561&language=ar&domain=anwaltsagent.de&origin=sales_lander_15&utm_medium=Parking&utm_campaign=offerpage" onclick="gtag('event', 'domain_click', {'event_category': 'engagement', 'event_label': 'anwaltsagent.de'});">Über Sedo kaufen</a>
         <a class="ghost-btn" href="mailto:alisalih.assets@gmail.com">E-Mail senden</a>
         <a class="ghost-btn" target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/ali-salih-capital">LinkedIn</a>
       </div>
