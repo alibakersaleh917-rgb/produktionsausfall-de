@@ -188,34 +188,85 @@ def _score_unsplash_candidate(candidate: dict, keyword: str) -> int:
     return score
 
 
-def fetch_unsplash_image(keyword: str, slug: str) -> str:
-    IMAGES_DIR.mkdir(parents=True, exist_ok=True)
-
-    better_query = f"{keyword} Germany law office legal consultation"
-
+def _unsplash_random_candidates(query: str, count: int = 8):
     response = requests.get(
         "https://api.unsplash.com/photos/random",
         params={
-            "query": better_query,
+            "query": query,
             "orientation": "landscape",
             "content_filter": "high",
-            "count": 8,
+            "count": count,
             "client_id": UNSPLASH_KEY,
         },
         timeout=60,
     )
 
+    if response.status_code == 404:
+        return []
+
     if response.status_code != 200:
-        raise Exception(f"Unsplash error: {response.status_code} {response.text[:300]}")
+        raise Exception(f"Unsplash random error: {response.status_code} {response.text[:300]}")
 
     data = response.json()
-    candidates = data if isinstance(data, list) else [data]
+    return data if isinstance(data, list) else [data]
+
+
+def _unsplash_search_candidates(query: str, per_page: int = 20):
+    response = requests.get(
+        "https://api.unsplash.com/search/photos",
+        params={
+            "query": query,
+            "orientation": "landscape",
+            "content_filter": "high",
+            "per_page": per_page,
+            "client_id": UNSPLASH_KEY,
+        },
+        timeout=60,
+    )
+
+    if response.status_code == 404:
+        return []
+
+    if response.status_code != 200:
+        raise Exception(f"Unsplash search error: {response.status_code} {response.text[:300]}")
+
+    data = response.json()
+    return data.get("results", [])
+
+
+def fetch_unsplash_image(keyword: str, slug: str) -> str:
+    IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+
+    queries = [
+        f"{keyword} Germany law office legal consultation",
+        f"{keyword} Germany legal",
+        "Germany law office",
+        "German courthouse legal",
+        "legal consultation office",
+    ]
+
+    candidates = []
+    for query in queries:
+        try:
+            random_hits = _unsplash_random_candidates(query, count=8)
+            candidates.extend(random_hits)
+
+            if len(candidates) < 3:
+                search_hits = _unsplash_search_candidates(query, per_page=20)
+                candidates.extend(search_hits)
+
+            if candidates:
+                break
+        except Exception as err:
+            print(f"Unsplash query failed ({query}): {err}")
+            continue
 
     if not candidates:
-        raise Exception("Unsplash returned no image candidates")
+        raise Exception("Unsplash returned no image candidates for all fallback queries")
 
     best = max(candidates, key=lambda c: _score_unsplash_candidate(c, keyword))
-    image_url = best["urls"].get("regular") or best["urls"].get("full")
+    urls = best.get("urls") or {}
+    image_url = urls.get("regular") or urls.get("full") or urls.get("small")
 
     if not image_url:
         raise Exception("Unsplash image URL missing")
@@ -460,12 +511,18 @@ def main():
             title = parsed["title"] if parsed else f"artikel-{random.randint(1000, 9999)}"
             slug = slugify(title) or f"artikel-{random.randint(1000, 9999)}"
 
-            image_path = fetch_unsplash_image(KEYWORD, slug)
+            image_path = ""
+            try:
+                image_path = fetch_unsplash_image(KEYWORD, slug)
+            except Exception as image_err:
+                print(f"Image fetch skipped: {image_err}")
+
             reviewed = normalize_article(reviewed, image_path=image_path)
 
             saved_path = save_article(reviewed, title)
             print(f"Saved: {saved_path}")
-            print(f"Image: {image_path}")
+            if image_path:
+                print(f"Image: {image_path}")
             return
 
         except Exception as e:

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <!-- Canonical merged version: single head/meta/theme block (conflict-resolved) -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Anwaltsagent.de — Premium Legal-Tech Domain</title>
@@ -409,14 +408,6 @@
       line-height: 1.05;
       margin-bottom: 12px;
     }
-    .post-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.3); }
-    .post-media { background: linear-gradient(160deg, #212f56, #15203a); min-height: 100%; }
-    .post-media img { width: 100%; height: 100%; object-fit: cover; }
-    .post-content { padding: 16px; }
-    .post-title { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
-    .post-subtext { color: var(--muted); font-size: 15px; margin-bottom: 10px; }
-    .post-action { color: #ffd7e2; font-weight: 700; }
-    .hidden { display: none !important; }
 
     .cta p {
       color: #d6e3ff;
@@ -570,13 +561,14 @@
 
       <div class="post-grid">
         {{ range .Site.RegularPages.ByDate.Reverse }}
-        <a href="{{ .Permalink }}" class="post-card" data-search="{{ lower .Title }} {{ lower .Description }} {{ lower (delimit .Params.keywords " ") }}">
+        {{ $post := . }}
+        <a href="{{ $post.Permalink }}" class="post-card" data-search="{{ lower $post.Title }} {{ lower ($post.Description | default "") }} {{ lower (delimit ($post.Params.keywords | default (slice)) " ") }}">
           <div class="post-media">
-            {{ with .Params.image }}<img src="{{ . }}" alt="{{ $.Title }}" />{{ end }}
+            {{ with $post.Params.image }}<img src="{{ . }}" alt="{{ $post.Title }}" />{{ end }}
           </div>
           <div class="post-body">
-            <h3>{{ .Title }}</h3>
-            <p>{{ if .Description }}{{ .Description }}{{ else }}Zum vollständigen Beitrag wechseln.{{ end }}</p>
+            <h3>{{ $post.Title }}</h3>
+            <p>{{ if $post.Description }}{{ $post.Description }}{{ else }}Zum vollständigen Beitrag wechseln.{{ end }}</p>
             <span>Artikel öffnen →</span>
           </div>
         </a>
