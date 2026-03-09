@@ -1,7 +1,25 @@
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-BQ0MKG6PFD"></script>
+{{ with .Site.Data.domain.analytics.ga_measurement_id }}
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ . }}"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-BQ0MKG6PFD');
+  gtag('config', '{{ . }}');
+
+  (function () {
+    const eventName = {{ $.Site.Data.domain.analytics.event_name | default "domain_click" | jsonify }};
+    const eventCategory = {{ $.Site.Data.domain.analytics.event_category | default "engagement" | jsonify }};
+    const eventLabel = {{ $.Site.Data.domain.domain | default "" | jsonify }};
+
+    document.addEventListener('click', function (event) {
+      const link = event.target.closest('a[data-track="sedo-cta"]');
+      if (!link || typeof gtag !== 'function') return;
+
+      gtag('event', eventName, {
+        event_category: eventCategory,
+        event_label: eventLabel
+      });
+    });
+  })();
 </script>
+{{ end }}

@@ -1,33 +1,44 @@
 import os
 import re
+import json
 import time
 import random
 import datetime
+import argparse
 from pathlib import Path
 from difflib import SequenceMatcher
 
-import requests
+from domain_config import DEFAULT_CONFIG, load_domain_config
 
-OPENROUTER_KEY = os.environ["OPENROUTER_KEY"]
-UNSPLASH_KEY = os.environ["UNSPLASH_KEY"]
+OPENROUTER_KEY = os.environ.get("OPENROUTER_KEY", "")
+UNSPLASH_KEY = os.environ.get("UNSPLASH_KEY", "")
 
 WRITER_MODEL = "google/gemini-2.0-flash-001"
 REVIEW_MODEL = "mistralai/mistral-small-24b-instruct-2501"
 
-CONFIG = {
-    "domain": "anwaltsagent.de",
-    "niche": "Rechtsberatung",
-    "geo": "Deutschland",
-    "audience": "Unternehmen und Privatpersonen",
-    "keywords": [
-        "Anwalt finden Deutschland",
-        "Rechtsanwalt beauftragen online",
-        "Anwaltssuche Deutschland",
-        "günstige Rechtsberatung online",
-        "Anwalt Erstberatung Kosten",
-        "bester Anwalt Deutschland finden",
-    ],
-}
+CONFIG_PATH = Path(os.environ.get("DOMAIN_CONFIG_PATH", "data/domain.yaml"))
+
+CONFIG = load_domain_config(CONFIG_PATH)
+
+def language_prompt_config(language_code: str) -> tuple[str, str]:
+    code = (language_code or "de").lower()
+    if code.startswith("de"):
+        return "Deutsch", "deutscher"
+    if code.startswith("en"):
+        return "English", "english"
+    if code.startswith("fr"):
+        return "Français", "français"
+    if code.startswith("es"):
+        return "Español", "español"
+    return language_code or "Deutsch", "international"
+
+
+def get_brand_positioning() -> str:
+    return CONFIG.get("brand_positioning") or (
+        f"{CONFIG['brand_name']} positioniert sich in {CONFIG['geo']} "
+        f"für {CONFIG['niche']} mit Fokus auf {CONFIG['audience']}."
+    )
+
 
 POSTS_DIR = Path("content/posts")
 IMAGES_DIR = Path("static/images")
@@ -36,6 +47,11 @@ KEYWORD = random.choice(CONFIG["keywords"])
 
 
 def call_openrouter(prompt: str, model: str, max_tokens: int = 2400) -> str:
+    if not OPENROUTER_KEY:
+        raise RuntimeError("OPENROUTER_KEY is required")
+
+    import requests
+
     response = requests.post(
         "https://openrouter.ai/api/v1/chat/completions",
         headers={
@@ -146,41 +162,28 @@ def _score_unsplash_candidate(candidate: dict, keyword: str) -> int:
     country = (location.get("country") or "").lower()
     city = (location.get("city") or "").lower()
 
-    if "germany" in country or "deutschland" in country:
-        score += 35
-    elif country:
-        score -= 5
+    geo_tokens = [t.lower() for t in re.split(r"[\s,;/]+", str(CONFIG.get("geo", ""))) if t]
 
-    if city in {"berlin", "hamburg", "münchen", "munich", "köln", "frankfurt"}:
-        score += 10
+    if country and any(token in country for token in geo_tokens):
+        score += 25
 
     title_blob = " ".join(
         [
             candidate.get("description") or "",
             candidate.get("alt_description") or "",
             keyword,
+            CONFIG.get("niche", ""),
+            CONFIG.get("seo_keyword_hints", ""),
         ]
     ).lower()
 
-    legal_signals = [
-        "law",
-        "legal",
-        "lawyer",
-        "attorney",
-        "justice",
-        "court",
-        "rechts",
-        "anwalt",
-        "kanzlei",
+    relevance_tokens = [
+        token.lower()
+        for token in re.split(r"[\s,;/]+", f"{CONFIG.get('niche','')} {CONFIG.get('seo_keyword_hints','')}")
+        if len(token) > 2
     ]
-    if any(signal in title_blob for signal in legal_signals):
+    if any(token in title_blob for token in relevance_tokens):
         score += 20
-
-    if "germany" in title_blob or "deutschland" in title_blob or "deutsch" in title_blob:
-        score += 15
-
-    if "flag" in title_blob and "germany" not in title_blob:
-        score -= 10
 
     score += int(candidate.get("width", 0) >= 1600)
     score += int(candidate.get("height", 0) >= 900)
@@ -189,6 +192,11 @@ def _score_unsplash_candidate(candidate: dict, keyword: str) -> int:
 
 
 def _unsplash_random_candidates(query: str, count: int = 8):
+    if not UNSPLASH_KEY:
+        raise RuntimeError("UNSPLASH_KEY is required")
+
+    import requests
+
     response = requests.get(
         "https://api.unsplash.com/photos/random",
         params={
@@ -212,6 +220,11 @@ def _unsplash_random_candidates(query: str, count: int = 8):
 
 
 def _unsplash_search_candidates(query: str, per_page: int = 20):
+    if not UNSPLASH_KEY:
+        raise RuntimeError("UNSPLASH_KEY is required")
+
+    import requests
+
     response = requests.get(
         "https://api.unsplash.com/search/photos",
         params={
@@ -237,13 +250,20 @@ def _unsplash_search_candidates(query: str, per_page: int = 20):
 def fetch_unsplash_image(keyword: str, slug: str) -> str:
     IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 
-    queries = [
-        f"{keyword} Germany law office legal consultation",
-        f"{keyword} Germany legal",
-        "Germany law office",
-        "German courthouse legal",
-        "legal consultation office",
-    ]
+    image_hint = CONFIG.get("image_style_hints", "")
+    query_seed = [hint.strip() for hint in str(image_hint).split(";") if hint.strip()]
+
+    geo = CONFIG.get("geo", "")
+    niche = CONFIG.get("niche", "")
+
+    queries = [f"{keyword} {hint}" for hint in query_seed]
+    queries.extend([
+        f"{keyword} {niche} {geo}",
+        f"{keyword} {geo}",
+        f"{niche} {geo}",
+        f"{keyword} consultation",
+        f"{niche} professional office",
+    ])
 
     candidates = []
     for query in queries:
@@ -270,6 +290,8 @@ def fetch_unsplash_image(keyword: str, slug: str) -> str:
 
     if not image_url:
         raise Exception("Unsplash image URL missing")
+
+    import requests
 
     image_response = requests.get(image_url, stream=True, timeout=60)
     if image_response.status_code != 200:
@@ -319,16 +341,16 @@ def strip_frontmatter_lines_from_body(body: str) -> str:
 
 
 def ensure_domain_cta(body: str) -> str:
-    cta_phrase = "Anwaltsagent.de"
+    cta_phrase = CONFIG.get("brand_name") or CONFIG["domain"]
     if cta_phrase.lower() in body.lower():
         return body.strip()
 
-    cta = (
-        "\n\n---\n\n"
+    cta_text = CONFIG.get("article_cta") or (
         "Wenn Sie eine Marke für Legal-Tech, digitale Rechtsberatung oder "
         "Mandantenvermittlung in Deutschland aufbauen möchten, kann "
-        "**Anwaltsagent.de** eine starke und einprägsame Domain für Ihr Projekt sein."
+        f"**{cta_phrase}** eine starke und einprägsame Domain für Ihr Projekt sein."
     )
+    cta = "\n\n---\n\n" + cta_text
     return body.strip() + cta
 
 
@@ -392,14 +414,18 @@ def is_duplicate(new_article: str, threshold: float = 0.70) -> bool:
 
 
 def generate_prompt(keyword: str) -> str:
+    language_name, language_style = language_prompt_config(CONFIG.get("language", "de"))
+    brand_positioning = get_brand_positioning()
+    seo_hints = CONFIG.get("seo_keyword_hints") or ""
+
     return f"""
-Du bist ein professioneller deutscher SEO-Content-Writer mit Fokus auf hochwertige, natürlich klingende Fachartikel.
+Du bist ein professioneller {language_style} SEO-Content-Writer mit Fokus auf hochwertige, natürlich klingende Fachartikel.
 
 Deine Aufgabe:
 Schreibe einen starken SEO-Artikel für die Domain {CONFIG["domain"]}.
 
 WICHTIGE REGELN:
-- Schreibe ausschließlich auf Deutsch.
+- Schreibe ausschließlich in {language_name}.
 - Gib nur reines Markdown zurück.
 - Keine Erklärungen vor oder nach dem Artikel.
 - Beginne direkt mit gültigem YAML-Frontmatter.
@@ -409,13 +435,17 @@ WICHTIGE REGELN:
 
 KONTEXT:
 - Domain: {CONFIG["domain"]}
+- Marke: {CONFIG["brand_name"]}
 - Nische: {CONFIG["niche"]}
 - Region: {CONFIG["geo"]}
+- Sprache: {language_name}
 - Zielgruppe: {CONFIG["audience"]}
+- Brand Positioning: {brand_positioning}
 - Hauptkeyword: {keyword}
+- SEO Keyword-Hinweise: {seo_hints}
 
 SEO-ZIEL:
-Der Artikel soll für Suchanfragen rund um das Hauptkeyword ranken und gleichzeitig thematisch zu digitaler Rechtsberatung, Legal-Tech oder Mandantenvermittlung passen.
+Der Artikel soll für Suchanfragen rund um das Hauptkeyword ranken und gleichzeitig zur Nische, Zielgruppe und Markenpositionierung passen.
 
 ANFORDERUNGEN:
 - Länge: 1100 bis 1400 Wörter
@@ -425,15 +455,15 @@ ANFORDERUNGEN:
   - kurze, starke Einleitung
   - prägnantes Fazit
 - Verwende das Hauptkeyword natürlich etwa 3 bis 5 Mal.
-- Verwende passende semantische Begriffe und verwandte Suchintentionen.
-- Schreibe informativ, klar und professionell.
+- Nutze sinnvolle semantische Begriffe und verwandte Suchintentionen.
+- Schreibe im Stil: {CONFIG["article_tone"]}.
 - Vermeide Wiederholungen.
 - Gib konkrete, praktische Informationen statt leerer Allgemeinplätze.
 - Der Artikel darf nicht mit Meta-Kommentaren beginnen.
 - Schreibe keinen Satz wie "Hier ist der Artikel" oder ähnliche Hinweise.
 
 WICHTIG FÜR DIE DOMAIN-STRATEGIE:
-Baue am Ende des Artikels eine kurze und natürliche Erwähnung ein, dass die Domain {CONFIG["domain"]} eine interessante Marke für Legal-Tech Plattformen, digitale Rechtsberatung oder Mandantenvermittlung in Deutschland sein kann.
+Baue am Ende des Artikels eine kurze und natürliche Erwähnung ein, dass die Domain {CONFIG["domain"]} für die Zielgruppe in dieser Nische eine interessante Marke sein kann.
 
 FORMAT:
 ---
@@ -450,14 +480,15 @@ Artikeltext...
 
 
 def review_prompt(article: str, keyword: str) -> str:
+    language_name, _ = language_prompt_config(CONFIG.get("language", "de"))
     return f"""
-Du bist ein strenger deutscher SEO-Editor.
+Du bist ein strenger SEO-Editor.
 
 Überarbeite den folgenden Artikel.
 
 REGELN:
 - Behalte YAML-Frontmatter.
-- Behalte die deutsche Sprache.
+- Behalte die Sprache: {language_name}.
 - Gib nur Markdown zurück.
 - Verbessere Lesbarkeit, Klarheit und Natürlichkeit.
 - Entferne Füllsätze und typische KI-Formulierungen.
@@ -482,25 +513,54 @@ def save_article(article: str, title: str) -> Path:
     return filename
 
 
+
+def run_dry_run(keyword: str):
+    print("=== DRY RUN ===")
+    print(f"Config path: {CONFIG_PATH}")
+    print("Domain:", CONFIG.get("domain"))
+    print("Brand:", CONFIG.get("brand_name"))
+    print("Niche:", CONFIG.get("niche"))
+    print("Geo:", CONFIG.get("geo"))
+    print("Language:", CONFIG.get("language"))
+    print("Audience:", CONFIG.get("audience"))
+    print("Tone:", CONFIG.get("article_tone"))
+    print("Keyword:", keyword)
+    print("\n--- Prompt Preview ---\n")
+    print(generate_prompt(keyword))
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dry-run", action="store_true", help="Print config/prompt and exit")
+    parser.add_argument("--keyword", default=None, help="Override random keyword")
+    return parser.parse_args()
+
 def main():
-    print(f"Keyword selected: {KEYWORD}")
+    args = parse_args()
+    selected_keyword = args.keyword or KEYWORD
+
+    if args.dry_run:
+        run_dry_run(selected_keyword)
+        return
+
+    print(f"Keyword selected: {selected_keyword}")
 
     for attempt in range(3):
         try:
-            draft = call_openrouter(generate_prompt(KEYWORD), WRITER_MODEL)
+            draft = call_openrouter(generate_prompt(selected_keyword), WRITER_MODEL)
             draft = normalize_article(draft)
 
             if not has_valid_frontmatter(draft):
                 raise ValueError("Draft frontmatter invalid")
 
-            reviewed = call_openrouter(review_prompt(draft, KEYWORD), REVIEW_MODEL)
+            reviewed = call_openrouter(review_prompt(draft, selected_keyword), REVIEW_MODEL)
             reviewed = normalize_article(reviewed)
 
             if not has_valid_frontmatter(reviewed):
                 print("Reviewed version invalid, using draft.")
                 reviewed = draft
 
-            count = keyword_count(reviewed, KEYWORD)
+            count = keyword_count(reviewed, selected_keyword)
             if count < 2 or count > 6:
                 print(f"Keyword count out of preferred range: {count}")
 
@@ -513,7 +573,7 @@ def main():
 
             image_path = ""
             try:
-                image_path = fetch_unsplash_image(KEYWORD, slug)
+                image_path = fetch_unsplash_image(selected_keyword, slug)
             except Exception as image_err:
                 print(f"Image fetch skipped: {image_err}")
 

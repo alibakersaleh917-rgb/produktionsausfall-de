@@ -1,0 +1,63 @@
+name: domain-factory-default
+visual_mood: "premium-dark"
+
+typography:
+  font_family: "Inter, ui-sans-serif, -apple-system, Segoe UI, Roboto, sans-serif"
+  article_font_family: "Inter, ui-sans-serif, -apple-system, Segoe UI, Roboto, sans-serif"
+
+palette:
+  bg: "#070b14"
+  bg_soft: "#0e1527"
+  card: "rgba(16, 24, 43, 0.75)"
+  card_strong: "rgba(20, 30, 52, 0.95)"
+  text: "#eef3ff"
+  text_muted: "#9fb0d6"
+  line: "rgba(170, 190, 255, 0.2)"
+  brand_1: "#7c8dff"
+  brand_2: "#39c2ff"
+  accent: "#ff6ea8"
+  success: "#4ade80"
+
+background:
+  body_gradient_1: "radial-gradient(1200px 700px at 15% -20%, rgba(124,141,255,0.25), transparent 60%)"
+  body_gradient_2: "radial-gradient(900px 520px at 95% 0%, rgba(57,194,255,0.18), transparent 62%)"
+  header_gradient: "linear-gradient(180deg, rgba(7,11,20,0.85), rgba(7,11,20,0.58))"
+  hero_card_gradient: "linear-gradient(155deg, rgba(124,141,255,0.28), rgba(57,194,255,0.12))"
+  eyebrow_bg: "rgba(124,141,255,0.13)"
+  cta_gradient: "linear-gradient(140deg, rgba(124,141,255,0.18), rgba(255,110,168,0.14))"
+  pill_gradient: "linear-gradient(135deg, var(--brand), var(--brand-2))"
+  brand_text_gradient: "linear-gradient(90deg, var(--brand), var(--brand-2))"
+
+borders:
+  card_border: "1px solid rgba(200,220,255,0.28)"
+  pill_border: "1px solid rgba(255,255,255,0.25)"
+  section_border: "1px solid var(--line)"
+
+effects:
+  shadow: "0 24px 70px rgba(0, 0, 0, 0.45)"
+  glow: "radial-gradient(circle, rgba(255,110,168,0.35), transparent 70%)"
+  pill_shadow: "0 10px 30px rgba(57,194,255,0.25)"
+
+card_style:
+  radius: "18px"
+  hero_radius: "24px"
+
+button_style:
+  pill_radius: "999px"
+  ghost_bg: "rgba(255,255,255,0.03)"
+
+hero_points:
+  - "Starke Brand Recall"
+  - "DACH Legal-Tech Fit"
+  - "Sofort einsatzbereit"
+
+positioning:
+  snapshot_label: "Positioning Snapshot"
+  snapshot_title: "High-Intent Domain mit klarer Kaufstory"
+  snapshot_text: "Kombiniert SEO-Basis, professionelles Auftreten und direkten Conversion-Pfad für Käufer mit Fokus auf Wachstum im Rechtsmarkt."
+
+section_labels:
+  features_title: "Craft-first Landing Structure"
+  features_text: "Inspiriert von modernem SaaS-Design: klare Section-Hierarchie, bessere Typografie, dezente Motion und conversion-orientierte Komposition."
+  latest_posts_title: "Neueste Beiträge"
+  latest_posts_text: "Aktuelle Legal-Tech-Artikel für Sichtbarkeit, Mandantengewinnung und digitale Rechtsberatung."

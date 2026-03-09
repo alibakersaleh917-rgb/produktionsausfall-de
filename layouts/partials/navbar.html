@@ -1,0 +1,32 @@
+{{- $ctx := .ctx -}}
+{{- $variant := .variant | default "default" -}}
+
+{{ if eq $variant "home" }}
+<header class="header">
+  <div class="container topbar">
+    <a class="brand" href="/">{{ $ctx.Site.Data.domain.brand_name }}</a>
+    <nav class="nav">
+      <a href="#features">Features</a>
+      <a href="#posts">Neueste Beiträge</a>
+      <a href="/posts/">Alle Beiträge</a>
+      <a href="#kontakt">Kontakt</a>
+      <a href="{{ $ctx.Site.Data.domain.cta.sedo_url }}" data-track="sedo-cta" class="pill-btn" target="_blank" rel="noopener noreferrer">{{ $ctx.Site.Data.domain.cta.nav_buy_label }}</a>
+    </nav>
+  </div>
+</header>
+{{ else if eq $variant "article" }}
+<nav class="top">
+  <a href="/">Startseite</a>
+  <a href="/posts/">Alle Beiträge</a>
+</nav>
+{{ else }}
+<header class="header">
+  <div class="container topbar">
+    <a class="brand" href="/">{{ $ctx.Site.Data.domain.brand_name }}</a>
+    <nav class="nav">
+      <a href="/">Startseite</a>
+      <a href="/posts/">Alle Beiträge</a>
+    </nav>
+  </div>
+</header>
+{{ end }}

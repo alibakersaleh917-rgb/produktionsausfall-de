@@ -1,0 +1,14 @@
+<section id="kontakt" class="reveal">
+  <div class="container cta">
+    <h2>{{ .Site.Data.domain.cta.contact_heading }}</h2>
+    <p>{{ .Site.Data.domain.cta.contact_body }}</p>
+
+    <div class="cta-actions">
+      <a class="pill-btn" target="_blank" rel="noopener noreferrer" href="{{ .Site.Data.domain.cta.sedo_url }}" data-track="sedo-cta">{{ .Site.Data.domain.cta.contact_buy_label }}</a>
+      <a class="ghost-btn" href="mailto:{{ .Site.Data.domain.cta.contact_email }}">{{ .Site.Data.domain.cta.contact_email_label }}</a>
+      <a class="ghost-btn" target="_blank" rel="noopener noreferrer" href="{{ .Site.Data.domain.cta.linkedin_url }}">{{ .Site.Data.domain.cta.linkedin_label }}</a>
+    </div>
+  </div>
+</section>
+
+<footer>© {{ .Site.Data.domain.brand_name }} 2026 — Premium Domain für den deutschen Legal‑Tech Markt</footer>

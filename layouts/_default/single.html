@@ -1,32 +1,11 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ .Title }} | Anwaltsagent.de</title>
-  <meta name="description" content="{{ .Description | default "Artikel auf Anwaltsagent.de" }}" />
-  <style>
-    body { font-family: Inter, ui-sans-serif, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background: #ffffff; color: #111827; }
-    .top { padding: 16px 18px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: center; gap: 14px; font-size: 14px; }
-    .top a { color: #334155; text-decoration: none; font-weight: 700; }
-    .article-wrap { max-width: 860px; margin: 0 auto; padding: 42px 18px 70px; line-height: 1.8; }
-    .article-label { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #e94560; background: #fff1f4; border-radius: 999px; padding: 7px 11px; margin-bottom: 18px; }
-    .article-title { font-size: 34px; line-height: 1.18; font-weight: 900; margin: 0 0 14px; }
-    .article-description { font-size: 18px; color: #4b5563; margin: 0 0 26px; }
-    .article-image { width: 100%; border-radius: 18px; margin-bottom: 30px; object-fit: cover; max-height: 430px; }
-    .article-content { font-size: 20px; color: #1f2937; }
-    .article-content h1,.article-content h2,.article-content h3,.article-content h4 { line-height: 1.22; font-weight: 900; margin-top: 34px; margin-bottom: 16px; }
-    .article-soft-cta { margin-top: 38px; padding-top: 24px; border-top: 1px solid #e5e7eb; }
-    .article-soft-links { display: flex; gap: 16px; flex-wrap: wrap; }
-    .article-soft-links a { font-size: 15px; font-weight: 800; color: #e94560; text-decoration: none; }
-  </style>
-  {{ partial "analytics.html" . }}
-</head>
+{{ partial "head.html" (dict
+  "ctx" .
+  "title" (printf "%s | %s" .Title .Site.Data.domain.brand_name)
+  "description" (.Description | default .Site.Data.domain.seo.article_default_description)
+  "stylePartial" "styles/single.css"
+) }}
 <body>
-  <nav class="top">
-    <a href="/">Startseite</a>
-    <a href="/posts/">Alle Beiträge</a>
-  </nav>
+  {{ partial "navbar.html" (dict "ctx" . "variant" "article") }}
   <article class="article-wrap">
     <div class="article-label">Artikel</div>
     <h1 class="article-title">{{ .Title }}</h1>
@@ -35,9 +14,9 @@
     <div class="article-content">{{ .Content }}</div>
 
     <div class="article-soft-cta">
-      <p>Wenn Sie eine Marke für Legal-Tech in Deutschland aufbauen möchten, kann <strong>Anwaltsagent.de</strong> eine starke und einprägsame Domain für Ihr Projekt sein.</p>
+      <p>{{ .Site.Data.domain.cta.single_article_text | safeHTML }}</p>
       <div class="article-soft-links">
-        <a href="https://sedo.com/search/details/?partnerid=324561&language=ar&domain=anwaltsagent.de&origin=sales_lander_15&utm_medium=Parking&utm_campaign=offerpage" onclick="gtag('event', 'domain_click', {'event_category': 'engagement', 'event_label': 'anwaltsagent.de'});">Domain über Sedo ansehen</a>
+        <a href="{{ .Site.Data.domain.cta.sedo_url }}" data-track="sedo-cta">{{ .Site.Data.domain.cta.single_article_sedo_label }}</a>
         <a href="/#kontakt">Direkt Kontakt aufnehmen</a>
       </div>
     </div>

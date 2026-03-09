@@ -1,0 +1,15 @@
+{{- $pages := .pages -}}
+{{- $lazy := .lazy | default false -}}
+{{ range $pages }}
+{{ $post := . }}
+<a href="{{ $post.Permalink }}" class="post-card" data-search="{{ lower $post.Title }} {{ lower ($post.Description | default "") }} {{ lower (delimit ($post.Params.keywords | default (slice)) " ") }}">
+  <div class="post-media">
+    {{ with $post.Params.image }}<img src="{{ . }}" alt="{{ $post.Title }}" {{ if $lazy }}loading="lazy"{{ end }} />{{ end }}
+  </div>
+  <div class="post-body">
+    <h{{ if $.headingLevel }}{{ $.headingLevel }}{{ else }}3{{ end }}>{{ $post.Title }}</h{{ if $.headingLevel }}{{ $.headingLevel }}{{ else }}3{{ end }}>
+    <p>{{ if $post.Description }}{{ $post.Description }}{{ else }}Zum vollständigen Beitrag wechseln.{{ end }}</p>
+    <span>Artikel öffnen →</span>
+  </div>
+</a>
+{{ end }}

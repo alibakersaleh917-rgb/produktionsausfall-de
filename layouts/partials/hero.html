@@ -1,0 +1,38 @@
+<section class="hero reveal">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow">{{ .Site.Data.domain.homepage.eyebrow }}</div>
+      <h1>{{ .Site.Data.domain.homepage.headline | safeHTML }}</h1>
+      <p>{{ .Site.Data.domain.homepage.subheadline }}</p>
+
+      <div class="hero-actions">
+        <a class="pill-btn" target="_blank" rel="noopener noreferrer" href="{{ .Site.Data.domain.cta.sedo_url }}" data-track="sedo-cta">{{ .Site.Data.domain.cta.hero_primary_label }}</a>
+        <a class="ghost-btn" href="#posts">{{ .Site.Data.domain.cta.hero_secondary_label }}</a>
+      </div>
+
+      <div class="hero-points">
+        {{ range .Site.Data.theme.hero_points }}
+        <span class="hero-point">{{ . }}</span>{{ end }}
+      </div>
+    </div>
+
+    <aside class="hero-card">
+      <div class="mini-label">{{ .Site.Data.theme.positioning.snapshot_label }}</div>
+      <h2>{{ .Site.Data.theme.positioning.snapshot_title }}</h2>
+      <p>{{ .Site.Data.theme.positioning.snapshot_text }}</p>
+
+      <div class="stats">
+        <div class="stat"><strong>DE</strong><span>Market-Fokus</span></div>
+        <div class="stat"><strong>SEO</strong><span>Content ready</span></div>
+        <div class="stat"><strong>CTA</strong><span>Sedo + Direktkontakt</span></div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="container logos">
+    <div class="logos-track">
+      <span>Legal-Tech</span><span>Mandantenvermittlung</span><span>Digitale Rechtsberatung</span><span>Kanzlei Marketing</span><span>Lead Generation</span><span>Domain Asset</span>
+      <span>Legal-Tech</span><span>Mandantenvermittlung</span><span>Digitale Rechtsberatung</span><span>Kanzlei Marketing</span><span>Lead Generation</span><span>Domain Asset</span>
+    </div>
+  </div>
+</section>

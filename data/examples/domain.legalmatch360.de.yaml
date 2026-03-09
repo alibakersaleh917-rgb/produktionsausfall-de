@@ -1,0 +1,51 @@
+domain: legalmatch360.de
+brand_name: LegalMatch360.de
+niche: Anwaltssuche & Rechtsberatung
+country: Deutschland
+language: de
+audience: Privatpersonen und kleine Unternehmen
+brand_positioning: "Digitale Matching-Plattform für schnelle, transparente und vertrauenswürdige Anwaltssuche in Deutschland."
+
+homepage:
+  title: "LegalMatch360.de — Anwaltssuche neu gedacht"
+  description: "LegalMatch360.de verbindet Mandanten schnell mit passenden Anwälten in Deutschland: transparent, digital und effizient."
+  eyebrow: "Matching + SEO + Conversion"
+  headline: "Die <strong>smarte Plattform</strong> für die richtige Anwaltsempfehlung"
+  subheadline: "LegalMatch360.de hilft Mandanten, schneller den passenden Rechtsbeistand zu finden — mit klarer Positionierung und hoher Suchintention."
+
+seo:
+  archive_title: "Alle Ratgeber"
+  archive_description: "Alle Beiträge auf LegalMatch360.de: Anwaltssuche, Rechtsberatung und praktische Rechtstipps für Deutschland."
+  article_default_description: "Ratgeber auf LegalMatch360.de"
+  keywords:
+    - "anwalt finden online"
+    - "rechtsberatung deutschland"
+    - "anwalt erstberatung kosten"
+    - "fachanwalt finden"
+    - "rechtliche hilfe schnell"
+
+cta:
+  sedo_url: "https://sedo.com/search/details/?domain=legalmatch360.de"
+  nav_buy_label: "Domain kaufen"
+  hero_primary_label: "Über Sedo anfragen"
+  hero_secondary_label: "Ratgeber ansehen"
+  contact_heading: "Interesse an LegalMatch360.de?"
+  contact_body: "Wenn Sie eine digitale Marke für Anwaltssuche und Rechtsberatung aufbauen möchten, ist diese Domain ein starker Startpunkt."
+  contact_buy_label: "Über Sedo kaufen"
+  contact_email_label: "E-Mail senden"
+  contact_email: "owner@example.com"
+  linkedin_label: "LinkedIn"
+  linkedin_url: "https://www.linkedin.com/in/example-owner"
+  single_article_text: "Wenn Sie eine starke Marke für digitale Anwaltssuche aufbauen möchten, kann <strong>LegalMatch360.de</strong> einprägsam und vertrauenswürdig wirken."
+  single_article_sedo_label: "Domain bei Sedo ansehen"
+
+analytics:
+  event_name: "domain_click"
+  event_category: "engagement"
+  ga_measurement_id: "G-REPLACE1234"
+
+content:
+  article_tone: "praxisnah, klar und vertrauensbildend"
+  seo_keyword_hints: "anwalt finden, erstberatung, rechtsgebiet, kosten, fachanwalt"
+  image_style_hints: "German law office; lawyer consultation; legal documents; courthouse exterior"
+  article_cta: "Wenn Sie eine Marke für digitale Anwaltssuche und Rechtsberatung entwickeln möchten, kann **LegalMatch360.de** eine interessante Domain-Basis sein."

@@ -1,0 +1,63 @@
+name: legalmatch360-dark
+visual_mood: "confident-dark-professional"
+
+typography:
+  font_family: "Inter, ui-sans-serif, -apple-system, Segoe UI, Roboto, sans-serif"
+  article_font_family: "Inter, ui-sans-serif, -apple-system, Segoe UI, Roboto, sans-serif"
+
+palette:
+  bg: "#0a1222"
+  bg_soft: "#111c33"
+  card: "rgba(17, 30, 54, 0.78)"
+  card_strong: "rgba(20, 34, 62, 0.96)"
+  text: "#ecf3ff"
+  text_muted: "#9fb3db"
+  line: "rgba(160, 185, 255, 0.24)"
+  brand_1: "#5b8cff"
+  brand_2: "#33d0ff"
+  accent: "#ff7aa2"
+  success: "#4ade80"
+
+background:
+  body_gradient_1: "radial-gradient(1200px 700px at 10% -20%, rgba(91,140,255,0.28), transparent 60%)"
+  body_gradient_2: "radial-gradient(1000px 540px at 100% 0%, rgba(51,208,255,0.2), transparent 62%)"
+  header_gradient: "linear-gradient(180deg, rgba(10,18,34,0.88), rgba(10,18,34,0.62))"
+  hero_card_gradient: "linear-gradient(155deg, rgba(91,140,255,0.30), rgba(51,208,255,0.13))"
+  eyebrow_bg: "rgba(91,140,255,0.16)"
+  cta_gradient: "linear-gradient(140deg, rgba(91,140,255,0.20), rgba(255,122,162,0.16))"
+  pill_gradient: "linear-gradient(135deg, var(--brand), var(--brand-2))"
+  brand_text_gradient: "linear-gradient(90deg, var(--brand), var(--brand-2))"
+
+borders:
+  card_border: "1px solid rgba(195,215,255,0.30)"
+  pill_border: "1px solid rgba(255,255,255,0.24)"
+  section_border: "1px solid var(--line)"
+
+effects:
+  shadow: "0 24px 68px rgba(0, 0, 0, 0.46)"
+  glow: "radial-gradient(circle, rgba(255,122,162,0.34), transparent 72%)"
+  pill_shadow: "0 10px 30px rgba(51,208,255,0.25)"
+
+card_style:
+  radius: "18px"
+  hero_radius: "24px"
+
+button_style:
+  pill_radius: "999px"
+  ghost_bg: "rgba(255,255,255,0.04)"
+
+hero_points:
+  - "Hohe Suchintention"
+  - "Starke Markenwirkung"
+  - "Schnell launchen"
+
+positioning:
+  snapshot_label: "Positioning Snapshot"
+  snapshot_title: "Klare Buyer-Journey für Legal-Matching"
+  snapshot_text: "Kombiniert Content, Markenvertrauen und direkte Conversion-Pfade für den deutschen Rechtsmarkt."
+
+section_labels:
+  features_title: "Conversion-orientierter Seitenaufbau"
+  features_text: "Klare Struktur, überzeugende Nutzenkommunikation und konsistente CTA-Platzierung für höhere Conversion."
+  latest_posts_title: "Aktuelle Beiträge"
+  latest_posts_text: "Neue Ratgeber rund um Anwaltssuche, Kosten, Rechtsgebiete und digitale Rechtsberatung."

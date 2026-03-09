@@ -1,0 +1,9 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": {{ .Site.Data.domain.brand_name | jsonify }},
+  "url": {{ printf "https://%s/" .Site.Data.domain.domain | jsonify }},
+  "inLanguage": {{ .Site.Data.domain.language | default "de" | jsonify }}
+}
+</script>
